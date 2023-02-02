@@ -1,5 +1,8 @@
 from django.urls import path
 from . import views
+import django.contrib.auth.views as auth_views
+
+app_name='notes'
 
 urlpatterns =[
     path('',views.index, name='index'),
