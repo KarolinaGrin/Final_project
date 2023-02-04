@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+    
+    <div class="add-modal" id="add-modal">
+        <div class="form">
+            <form action="" method="POST">
+                <h3>Edit Category</h3>
+                {% csrf_token %}
+                {{form | crispy}}
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button class="btn btn-danger close-btn" href="{% url 'notes:category-list' %}">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+   
+    <script src="js/index.js"></script>
+{% endblock body %}
+   

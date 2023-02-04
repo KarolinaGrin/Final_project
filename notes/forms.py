@@ -1,5 +1,5 @@
 from django import forms
-from .models import Notes
+from .models import Notes, Category
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -19,6 +19,7 @@ class UserForm(UserCreationForm):
         }
     ))
 
+
 class NoteCreationForm(forms.ModelForm):
     class Meta:
         model = Notes
@@ -35,3 +36,9 @@ class AccountSettingsForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name']
+
+
+class CategoryCreationForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['title']
