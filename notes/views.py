@@ -12,6 +12,7 @@ from django.views import generic
 
 # Create your views here.
 
+
 @login_required
 def index(request):
     return render(request, 'notes/index.html')
@@ -53,6 +54,7 @@ def register(request):
     }
     return render(request, 'notes/register.html', context)
 
+
 @login_required
 def home_page(request):
     notes = Notes.objects.all()
@@ -72,6 +74,78 @@ def home_page(request):
         'form': form
     }
     return render(request, 'notes/home.html', context)
+
+
+@login_required
+def get_note_list(request):
+
+    all_notes = Notes.objects.all()
+
+    context = {
+        'notes': all_notes,
+        'form': NoteCreationForm,
+
+    }
+    return render(request, 'notes/home.html', context)
+
+
+@login_required
+def create_note(request):
+    title = request.POST.get("title")
+
+    if title:
+        form = NoteCreationForm(request.POST)
+        if form.is_valid():
+            note = Notes.objects.create(title=title)
+            note.save()
+
+    return get_note_list(request)
+
+
+@login_required
+def notes(request):
+    if request.method == 'GET':
+        return get_note_list(request)
+
+    elif request.method == 'POST':
+        return create_note(request)
+
+
+@login_required
+def edit_note(request, note_id):
+    note = get_object_or_404(Notes, pk=note_id)
+    form = NoteUpdateForm(instance=note)
+
+    if request.method == "POST":
+        form = NoteUpdateForm(request.POST)
+
+        if form.is_valid():
+            note.title = form.cleaned_data["title"]
+
+            note.save()
+
+            return redirect('notes:note-list')
+
+    elif request.method == 'DELETE':
+        note.delete()
+
+        return get_note_list(request)
+
+    context = {
+        'note': note,
+        'form': form
+    }
+    return render(request, 'notes/edit.html', context)
+
+
+@login_required
+def delete_note(request, note_id):
+    note = get_object_or_404(Notes, pk=note_id)
+
+    note.delete()
+
+    return get_note_list(request)
+
 
 @login_required
 def settings(request):
@@ -99,27 +173,6 @@ def logout_view(request):
     logout(request)
     return render(request, 'notes/logout.html')
 
-@login_required
-def edit(request):
-    note_to_update = Notes.objects.get(id=id)
-    form = NoteUpdateForm(instance=note_to_update)
-
-    if request.method == "POST":
-        form = NoteUpdateForm(request.POST)
-
-        if form.is_valid():
-            note_to_update.title = form.cleaned_data["title"]
-            note_to_update.description = form.cleaned_data["description"]
-
-            note_to_update.save()
-
-            return redirect('notes:home_page')
-
-    context = {
-        'note': note_to_update,
-        'form': form
-    }
-    return render(request, 'notes/update.html', context)
 
 @login_required
 def delete(request, id):
@@ -128,6 +181,7 @@ def delete(request, id):
     note_to_delete.delete()
 
     return redirect('notes:home_page')
+
 
 @login_required
 def get_category_list(request):
@@ -144,6 +198,7 @@ def get_category_list(request):
     }
     return render(request, 'notes/category.html', context)
 
+
 @login_required
 def create_category(request):
     title = request.POST.get("title")
@@ -156,6 +211,7 @@ def create_category(request):
 
     return get_category_list(request)
 
+
 @login_required
 def categories(request):
     if request.method == 'GET':
@@ -163,6 +219,7 @@ def categories(request):
 
     elif request.method == 'POST':
         return create_category(request)
+
 
 @login_required
 def edit_category(request, category_id):
@@ -189,6 +246,7 @@ def edit_category(request, category_id):
         'form': form
     }
     return render(request, 'notes/categoryedit.html', context)
+
 
 @login_required
 def delete_category(request, category_id):

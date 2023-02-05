@@ -1,21 +1,24 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block body %}
-    <div class="container">
-       <div class="form">
-            <h3 class="text-primary">Edit Note</h3>
-            <form action="" method="POST">
+<div class="add-modal" id="add-modal">
+    <div class="form">
+        <form action="" method="POST">
+            <h3>Edit Category</h3>
+                {% csrf_token %}
+                {{form | crispy}}
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" name="title" id="title" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="notes">Description</label>
+                    <label for="notes">Text</label>
                     <textarea name="description" id="description" class="form-control" rows="5">
                     </textarea>
                 </div>
-                <button type="submit" class="btn-info btn">Edit</button>
-            </form>
+                <button type="submit" class="btn btn-primary" href="{% url 'notes:note-list' %}">Save</button>
+                <button class="btn btn-danger close-btn" href="{% url 'notes:note-list' %}">Cancel</button>
        </div>
     </div>
+<script src="js/index.js"></script>
 {% endblock body%}
