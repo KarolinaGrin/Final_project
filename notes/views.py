@@ -9,6 +9,7 @@ from .forms import UserForm
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
 from django.views import generic
+from .forms import NotesFilterForm
 
 # Create your views here.
 
@@ -26,7 +27,7 @@ def login_view(request):
 
     if user is not None:
         login(request, user)
-        return redirect('notes:home')
+        return redirect('notes:note-list')
     elif username and password:
         messages.info(request, 'Login attemp failed.')
 
@@ -55,38 +56,41 @@ def register(request):
     return render(request, 'notes/register.html', context)
 
 
-@login_required
-def home_page(request):
-    notes = Notes.objects.all()
-    form = NoteCreationForm()
+# @login_required
+# def home_page(request):
+#     notes = Notes.objects.all()
+#     form = NoteCreationForm()
 
-    if request.method == "POST":
-        form = NoteCreationForm(request.POST)
+#     if request.method == "POST":
+#         form = NoteCreationForm(request.POST)
 
-        if form.is_valid():
-            note_obj = form.save(commit=False)
-            note_obj.author = request.user
-            note_obj.save()
+#         if form.is_valid():
+#             note_obj = form.save(commit=False)
+#             note_obj.author = request.user
+#             note_obj.save()
 
-            return redirect('note/home.html')
-    context = {
-        'notes': notes,
-        'form': form
-    }
-    return render(request, 'notes/home.html', context)
+#             return redirect('note/note.html')
+#     context = {
+#         'notes': notes,
+#         'form': form
+#     }
+#     return render(request, 'notes/note.html', context)
 
 
 @login_required
 def get_note_list(request):
 
     all_notes = Notes.objects.all()
+    all_categories = Category.objects.all()
 
     context = {
         'notes': all_notes,
+        'categories': all_categories,
         'form': NoteCreationForm,
+        'filter_form': NotesFilterForm,
 
     }
-    return render(request, 'notes/home.html', context)
+    return render(request, 'notes/note.html', context)
 
 
 @login_required
@@ -96,14 +100,16 @@ def create_note(request):
     if title:
         form = NoteCreationForm(request.POST)
         if form.is_valid():
-            note = Notes.objects.create(title=title)
-            note.save()
+            note_obj = form.save(commit=False)
+            note_obj.author = request.user
+            note_obj.save()
 
     return get_note_list(request)
 
 
 @login_required
 def notes(request):
+
     if request.method == 'GET':
         return get_note_list(request)
 
@@ -120,16 +126,16 @@ def edit_note(request, note_id):
         form = NoteUpdateForm(request.POST)
 
         if form.is_valid():
+
             note.title = form.cleaned_data["title"]
+            note.description = form.cleaned_data["description"]
+            note.category = form.cleaned_data["category"]
 
             note.save()
 
+            # form.save()
+
             return redirect('notes:note-list')
-
-    elif request.method == 'DELETE':
-        note.delete()
-
-        return get_note_list(request)
 
     context = {
         'note': note,
@@ -144,7 +150,7 @@ def delete_note(request, note_id):
 
     note.delete()
 
-    return get_note_list(request)
+    return redirect('notes:note-list')
 
 
 @login_required
@@ -180,7 +186,7 @@ def delete(request, id):
 
     note_to_delete.delete()
 
-    return redirect('notes:home_page')
+    return redirect('notes:note-list')
 
 
 @login_required
@@ -206,8 +212,7 @@ def create_category(request):
     if title:
         form = CategoryCreationForm(request.POST)
         if form.is_valid():
-            category = Category.objects.create(title=title)
-            category.save()
+            form.save()
 
     return get_category_list(request)
 

@@ -9,7 +9,6 @@
                 
             {% for category in categories %}
             <div class="category">
-                <h2 class="text-info">Yo</h2>
                 <p>{{category.title}}</p>
                 <div class="options">
                     <a href="{% url 'notes:category-detail' category.id%}" class="btn btn-success">Edit</a>

@@ -21,15 +21,16 @@ class UserForm(UserCreationForm):
 
 
 class NoteCreationForm(forms.ModelForm):
+
     class Meta:
         model = Notes
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'category']
 
 
 class NoteUpdateForm(forms.ModelForm):
     class Meta:
         model = Notes
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'category']
 
 
 class AccountSettingsForm(forms.ModelForm):
@@ -42,3 +43,7 @@ class CategoryCreationForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ['title']
+        
+class NotesFilterForm(forms.Form):
+    title_filter = forms.CharField(required=False, max_length=45)
+    category_filter = forms.ModelChoiceField(required=False, queryset=Category.objects.all().order_by('title'))

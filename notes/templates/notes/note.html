@@ -3,17 +3,23 @@
 {% block body %}
     <div class="container">
         <br>
+        <div class ='title-filter'>
+            <form action="" method="get">
+                {{filter_form | crispy}}
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
         <h1>Recent Notes</h1>
         <div class="notes">
             {% if notes %}
 
             {% for note in notes %}
             <div class="note">
-                <h2 class="text-info">Yo</h2>
-                <p>{{note.title}}</p>
+                <h1>{{note.title}}</h1>
+                <p>{{note.category}}</p>
                 <div class="options">
-                    <a href="{% url 'notes:edit-note'note.id%}" class="btn btn-success">Edit</a>
-                    <a href="{% url 'notes:delete-note' note.id%}" class="btn btn-danger">Delete</a>
+                    <a href="{% url 'notes:edit-note' note.id%}" class="btn btn-success">Edit</a>
+                    <a href="{% url 'notes:note-delete' note.id%}" class="btn btn-danger">Delete</a>
                 </div>
             </div>
             {% endfor %}
@@ -30,14 +36,8 @@
         <div class="form">
             <form action="" method="post">
                 <h3>Add Note</h3>
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="description">description</label>
-                    <textarea name="description" id="description" class="form-control" rows="5"></textarea>
-                </div>
+                {% csrf_token %}
+                {{form | crispy}}
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
@@ -45,6 +45,5 @@
         </div>
     </div>
    
-    <script src="js/index.js"></script>
 {% endblock body %}
    
