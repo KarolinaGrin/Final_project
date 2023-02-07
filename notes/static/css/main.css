@@ -1,8 +1,14 @@
 .container {
     display: grid;
-    grid-template-columns: 2;
+    grid-template-columns: 3;
     grid-gap: 20px;
     padding: 10px;
+}
+
+.container-categories {
+    display: grid;
+    grid-template-columns: 3;
+
 }
 
 .container3 {
@@ -20,4 +26,17 @@
 .container2 {
     grid-column: 2/2;
     grid-row: 3/3;
+}
+
+.categories2 {
+
+    display: grid;
+    grid-template-columns: 3;
+}
+
+.categories1 {
+
+    grid-column: 3/3;
+    grid-row: 3/3;
+
 }

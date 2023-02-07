@@ -255,4 +255,4 @@ def delete_category(request, category_id):
 
     category.delete()
 
-    return get_category_list(request)
+    return redirect("notes:category-list")
