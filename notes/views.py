@@ -10,7 +10,6 @@ from .forms import (
 )
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import UserForm
 from django.shortcuts import get_object_or_404
 from .forms import NotesFilterForm
 
@@ -54,27 +53,6 @@ def register(request):
 
     context = {"form": form}
     return render(request, "notes/register.html", context)
-
-
-# @login_required
-# def home_page(request):
-#     notes = Notes.objects.all()
-#     form = NoteCreationForm()
-
-#     if request.method == "POST":
-#         form = NoteCreationForm(request.POST)
-
-#         if form.is_valid():
-#             note_obj = form.save(commit=False)
-#             note_obj.author = request.user
-#             note_obj.save()
-
-#             return redirect('note/note.html')
-#     context = {
-#         'notes': notes,
-#         'form': form
-#     }
-#     return render(request, 'notes/note.html', context)
 
 
 @login_required
@@ -140,8 +118,6 @@ def edit_note(request, note_id):
 
             note.save()
 
-            # form.save()
-
             return redirect("notes:note-list")
 
     context = {"note": note, "form": form}
@@ -192,9 +168,6 @@ def delete(request, id):
 
 @login_required
 def get_category_list(request):
-    # username = request.POST.get("username")
-    # password = request.POST.get("password")
-    # user = authenticate(username=username, password=password)
     all_categories = Category.objects.all()
 
     context = {
