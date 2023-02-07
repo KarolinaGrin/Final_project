@@ -1,39 +1,42 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block body %}
-    <div class="container">
-        <br>
-        <h1>Categories</h1>
-        <div class="categories">
-            {% if categories %}
-                
-            {% for category in categories %}
-            <div class="category">
-                <p>{{category.title}}</p>
-                <div class="options">
-                    <a href="{% url 'notes:category-detail' category.id%}" class="btn btn-success">Edit</a>
-                    <a href="{% url 'notes:category-delete' category.id%}" class="btn btn-danger">Delete</a>
+        <div class="container">
+            <div class="categories2">
+                <br>
+                <h1>Categories</h1>
+                <div class="categories">
+                    {% if categories %}
+                        
+                    {% for category in categories %}
+                    <div class="category">
+                        <p>{{category.title}}</p>
+                        <div class="options">
+                            <a href="{% url 'notes:category-detail' category.id%}" class="btn btn-success">Edit</a>
+                            <a href="{% url 'notes:category-delete' category.id%}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                        
+                {% endif %}
+                </div>
+            </div>    
+
+            <div class="categories1">
+                <div class="add-modal" id="add-modal">
+                    <div class="form">
+                        <form action="" method="POST">
+                            <h3>Add Category</h3>
+                            {% csrf_token %}
+                            {{form | crispy}}
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
-                
-        {% endif %}
-        </div>
-    </div>
-    <div class="add-modal" id="add-modal">
-        <div class="form">
-            <form action="" method="POST">
-                <h3>Add Category</h3>
-                {% csrf_token %}
-                {{form | crispy}}
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-danger close-btn" onclick="closeModal('add-modal')">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-   
-    <script src="js/index.js"></script>
+        </div>    
+
 {% endblock body %}
    
